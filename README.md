@@ -1,16 +1,20 @@
-# Netlify Next.js + Contentful Minimal Starter
+# Dream Cheesers - Next.js + Contentful
 
-![Screenshot](https://assets.stackbit.com/docs/tutorial-shared-thumb.png)
+A modern Next.js website using Contentful as a headless CMS. This project has been reworked from the original Netlify template to use a more traditional Next.js approach with clean component architecture.
 
-**⚡ View demo:** [nextjs-contentful-starter.netlify.app](https://nextjs-contentful-starter.netlify.app/)
+## Features
+
+- **Next.js 15** - Latest version with App Router
+- **Contentful CMS** - Headless content management
+- **Tailwind CSS** - Utility-first CSS framework
+- **TypeScript Ready** - Easy to migrate to TypeScript
+- **SEO Optimized** - Built-in metadata and SEO features
 
 ## Prerequisites
 
 Before you begin, please make sure you have the following:
 
-- [Netlify account](https://www.netlify.com/)
 - [Contentful account](https://www.contentful.com/)
-- GitHub, GitLab or Bitbucket account
 - Node v18+ or later
 - (optional) [nvm](https://github.com/nvm-sh/nvm) for Node version management.
 
@@ -44,58 +48,70 @@ From the same place you generated the management token, you can now generate API
 
 ### Set Environment Variables
 
-In your project, duplicate `.env.example` to `.env`. 
+Create a `.env.local` file in your project root and add your Contentful credentials:
 
-Fill in the values in the file based on the keys you've created. 
+```bash
+CONTENTFUL_SPACE_ID=your_space_id_here
+CONTENTFUL_DELIVERY_TOKEN=your_delivery_token_here
+CONTENTFUL_PREVIEW_TOKEN=your_preview_token_here
+CONTENTFUL_MANAGEMENT_TOKEN=your_management_token_here
+```
 
 Note: the Contentful space ID can be viewed and copied via *Settings->General Settings* in Contentful.
 
-### Import Content
+### Import Content (Optional)
 
-Import the provided content models & content into Contentful by running the `import.js` script:
+If you want to use the existing content models, import them into Contentful:
 
     npm run import
 
-If the import fails to run, make sure that you've run `npm install` and that all keys in your `.env` file are set correctly.
-
 ### Run the Website
 
-Run the Next.js development server:
+Install dependencies and run the Next.js development server:
 
+    npm install
     npm run dev
 
-Visit [localhost:3000](http://localhost:3000) and you should see the example content you imported into your new Contentful space.
+Visit [localhost:3000](http://localhost:3000) to see your website.
 
-### Run Netlify Visual Editor in Local Development Mode
+## Project Structure
 
-Keep the Next.js development server running, and open a new command-line window in the same directory.
+```
+src/
+  app/
+    layout.jsx          # Root layout component
+    page.jsx            # Homepage with custom design
+    [...slug]/
+      page.jsx          # Dynamic page routing
+  components/
+    Button.jsx          # Reusable button component
+    Hero.jsx            # Hero section component
+    Stats.jsx           # Statistics section component
+  utils/
+    content.js          # Contentful API utilities
+```
 
-Install Stackbit's CLI tools (once):
-    
-    npm i -g @stackbit/cli@latest
+## Customization
 
-Run the CLI:
+This project uses a traditional Next.js approach, making it easy to:
 
-    stackbit dev
+- **Add new pages** - Create new files in `src/app/`
+- **Create components** - Add React components in `src/components/`
+- **Style with CSS** - Use Tailwind classes or custom CSS
+- **Fetch content** - Use utilities from `src/utils/content.js`
 
-Click the displayed link to [localhost:8090/_stackbit](http://localhost:8090/_stackbit) and the visual editor will open.
+## Content Management
 
-### Create a Cloud-Based Netlify Project
+Content is managed through Contentful and fetched using clean utility functions:
 
-To deploy a cloud-based Netlify project your need to connected your repository to Netlify:
+- `getHomepageContent()` - Fetches hero and stats content
+- `getContentByType(type)` - Fetches all entries of a specific type
+- `getPageFromSlug(slug)` - Fetches page content by URL slug
 
-1. If you haven't created your GitHub project repository, create it and push your code to GitHub
-2. Open the [app.netlify.com](https://app.netlify.com/), and choose "Import from Git" in the "Import an existing project" section
-3. In the "Configure site and deploy" step you will see the "Visual editor" section. To make it work, you will need to install "Netlify Visual Editor GitHub App" in your GitHub account.
-4. Deploy your project
+## Deployment
 
-## Next Steps
+Deploy to your preferred platform:
 
-Here are a few suggestions on what to do next if you're new to Netlify visual editor:
-
-- Learn [how Netlify visual editor works](https://docs.netlify.com/visual-editor/overview/)
-- Check [Netlify visual editor reference documentation](https://visual-editor-reference.netlify.com/)
-
-## Support
-
-If you get stuck along the way, get help in our [support forums](https://answers.netlify.com/).
+- **Vercel** - Connect your GitHub repo to Vercel
+- **Netlify** - Connect your GitHub repo to Netlify  
+- **Any Node.js host** - Run `npm run build` and deploy the `.next` folder
