@@ -1,20 +1,5 @@
 import { createClient, Entry, Asset, EntryCollection } from 'contentful';
-import { 
-  ContentfulEntry,
-  ContentfulImage,
-  Hero, 
-  Stats, 
-  Page, 
-  HomepageContent,
-  ContentfulHeroFields,
-  ContentfulStatsFields,
-  ContentfulPageFields 
-} from '../types/contentful';
-
-// Content type IDs
-const PAGE_CONTENT_TYPE_ID = 'page';
-const HERO_CONTENT_TYPE_ID = 'hero';
-const STATS_CONTENT_TYPE_ID = 'stats';
+import { ContentfulEntry, ContentfulImage, Episode, ShowNote } from '../types/content';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
@@ -46,42 +31,93 @@ export async function getContentByType(contentType: string): Promise<ContentfulE
   return items.map(mapEntry);
 }
 
-// Get homepage content
-export async function getHomepageContent(): Promise<HomepageContent> {
+// Get all episodes, sorted by release date (newest first)
+export async function getEpisodes(): Promise<Episode[]> {
   try {
-    const [heroEntries, statsEntries] = await Promise.all([
-      getEntries(HERO_CONTENT_TYPE_ID),
-      getEntries(STATS_CONTENT_TYPE_ID)
-    ]);
-
-    return {
-      hero: heroEntries.items.length > 0 ? mapEntry(heroEntries.items[0]) as Hero : null,
-      stats: statsEntries.items.length > 0 ? mapEntry(statsEntries.items[0]) as Stats : null,
-    };
+    // Try different possible content type IDs for episodes
+    let items: any[] = [];
+    
+    try {
+      const result = await getEntries('episode', { 
+        order: '-fields.releaseDate' 
+      });
+      items = result.items;
+    } catch {
+      // If 'episode' doesn't work, try 'episodes'
+      try {
+        const result = await getEntries('episodes', { 
+          order: '-fields.releaseDate' 
+        });
+        items = result.items;
+      } catch {
+        console.log('No episodes content type found yet, returning empty array');
+        return [];
+      }
+    }
+    
+    return items.map(mapEntry) as Episode[];
   } catch (error) {
-    console.error('Error fetching homepage content:', error);
-    return { hero: null, stats: null };
+    console.error('Error fetching episodes:', error);
+    return [];
   }
 }
 
-export async function getPagePaths(): Promise<string[]> {
-  const { items } = await getEntries(PAGE_CONTENT_TYPE_ID);
-  return items.map((page) => {
-    const slug = page.fields.slug as string;
-    if (!slug) return '/';
-    return typeof slug === 'string' && slug.startsWith('/') ? slug : `/${slug}`;
-  });
+// Get all show notes
+export async function getShowNotes(): Promise<ShowNote[]> {
+  try {
+    let items: any[] = [];
+    
+    try {
+      const result = await getEntries('showNote', {
+        order: 'fields.displayName'
+      });
+      items = result.items;
+    } catch {
+      // If 'showNote' doesn't work, try 'showNotes'
+      try {
+        const result = await getEntries('showNotes', {
+          order: 'fields.displayName'
+        });
+        items = result.items;
+      } catch {
+        console.log('No show notes content type found yet, returning empty array');
+        return [];
+      }
+    }
+    
+    return items.map(mapEntry) as ShowNote[];
+  } catch (error) {
+    console.error('Error fetching show notes:', error);
+    return [];
+  }
 }
 
-export async function getPageFromSlug(slug: string): Promise<Page> {
-  const { items } = await getEntries(PAGE_CONTENT_TYPE_ID, { 'fields.slug': slug });
-  let page = (items ?? [])[0];
-  if (!page && slug !== '/' && slug.startsWith('/')) {
-    const { items } = await getEntries(PAGE_CONTENT_TYPE_ID, { 'fields.slug': slug.slice(1) });
-    page = (items ?? [])[0];
+// Get a specific episode by episode number
+export async function getEpisodeByNumber(episodeNumber: number): Promise<Episode | null> {
+  try {
+    let items: any[] = [];
+    
+    try {
+      const result = await getEntries('episode', {
+        'fields.episodeNumber': episodeNumber
+      });
+      items = result.items;
+    } catch {
+      try {
+        const result = await getEntries('episodes', {
+          'fields.episodeNumber': episodeNumber
+        });
+        items = result.items;
+      } catch {
+        return null;
+      }
+    }
+    
+    return items.length > 0 ? mapEntry(items[0]) as Episode : null;
+  } catch (error) {
+    console.error('Error fetching episode by number:', error);
+    return null;
   }
-  if (!page) throw new Error(`Page not found for slug: ${slug}`);
-  return mapEntry(page) as Page;
 }
 
 // Map Contentful entry to clean object
