@@ -120,16 +120,63 @@ export async function getEpisodeByNumber(episodeNumber: number): Promise<Episode
   }
 }
 
+// Get a specific show note by ID
+export async function getShowNoteById(id: string): Promise<ShowNote | null> {
+  try {
+    const client = createContentfulClient();
+    const entry = await client.getEntry(id);
+    return mapEntry(entry) as ShowNote;
+  } catch (error) {
+    console.error('Error fetching show note by ID:', error);
+    return null;
+  }
+}
+
+// Get a specific show note by internal name
+export async function getShowNoteByInternalName(internalName: string): Promise<ShowNote | null> {
+  try {
+    let items: any[] = [];
+    
+    try {
+      const result = await getEntries('showNote', {
+        'fields.internalName': internalName,
+        limit: 1
+      });
+      items = result.items;
+    } catch {
+      try {
+        const result = await getEntries('showNotes', {
+          'fields.internalName': internalName,
+          limit: 1
+        });
+        items = result.items;
+      } catch {
+        console.log('No show notes content type found');
+        return null;
+      }
+    }
+    
+    return items.length > 0 ? mapEntry(items[0]) as ShowNote : null;
+  } catch (error) {
+    console.error('Error fetching show note by internal name:', error);
+    return null;
+  }
+}
+
 // Map Contentful entry to clean object
 function mapEntry(entry: any): any {
   const id = entry.sys?.id;
   const type = entry.sys?.contentType?.sys?.id || entry.sys?.type;
 
   if (entry.sys?.type === 'Asset') {
+    const fileUrl = entry.fields?.file?.url || '';
+    // Contentful URLs can come as protocol-relative (//...) or with protocol (https://...)
+    const src = fileUrl.startsWith('//') ? `https:${fileUrl}` : fileUrl.startsWith('http') ? fileUrl : `https:${fileUrl}`;
+    
     return {
       id,
       type,
-      src: `https:${entry.fields?.file?.url || ''}`,
+      src,
       alt: entry.fields?.title || entry.fields?.description || '',
       width: entry.fields?.file?.details?.image?.width,
       height: entry.fields?.file?.details?.image?.height,

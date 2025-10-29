@@ -48,75 +48,67 @@ export default async function HomePage() {
       {/* Episodes Section */}
       <div className="max-w-6xl mx-auto px-6 py-12">
         {episodes.length > 0 ? (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-6">
             {episodes.map((episode) => (
-              <div key={episode.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                {/* Episode Thumbnail */}
-                <div className="aspect-video bg-purple-100 relative">
-                  {episode.thumbnail ? (
-                    <Image
-                      src={episode.thumbnail.src}
-                      alt={episode.thumbnail.alt || episode.episodeTitle}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 767px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Episode Content */}
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {episode.episodeTitle}
-                    </h3>
-                    <span className="text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">
-                      #{episode.episodeNumber}
-                    </span>
-                  </div>
-                  
-                  <p className="text-sm text-gray-500 mb-3">
-                    Released: {formatDate(episode.releaseDate)}
-                  </p>
-                  
-                  {episode.description && (
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {episode.description}
-                    </p>
-                  )}
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-purple-600 font-medium">
-                        Episode available
-                      </span>
-                      {episode.showNotes && episode.showNotes.length > 0 && (
-                        <span className="text-xs text-gray-500">
-                          • {episode.showNotes.length} show notes
-                        </span>
+              <Link key={episode.id} href={`/episodes/${episode.episodeNumber}`}>
+                <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex flex-col md:flex-row">
+                    {/* Episode Thumbnail */}
+                    <div className="w-full md:w-80 aspect-video md:aspect-square bg-purple-100 relative flex-shrink-0">
+                      {episode.thumbnail ? (
+                        <Image
+                          src={episode.thumbnail.src}
+                          alt={episode.thumbnail.alt || episode.episodeTitle}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 767px) 100vw, 320px"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center">
+                            <svg className="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
                       )}
                     </div>
-                    {episode.episodeFile && (
-                      <a
-                        href={episode.episodeFile.src}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-600 transition-colors"
-                      >
-                        Listen
-                      </a>
-                    )}
+                    
+                    {/* Episode Content */}
+                    <div className="flex-1 p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="text-2xl font-semibold text-gray-900 pr-4">
+                          {episode.episodeTitle}
+                        </h3>
+                        <span className="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-medium flex-shrink-0">
+                          #{episode.episodeNumber}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm text-gray-500 mb-4">
+                        Released: {formatDate(episode.releaseDate)}
+                      </p>
+                      
+                      {episode.description && (
+                        <p className="text-gray-600 text-base mb-6 line-clamp-3">
+                          {episode.description}
+                        </p>
+                      )}
+                      
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-purple-600 font-medium">
+                          Click to view episode
+                        </span>
+                        {episode.showNotes && episode.showNotes.length > 0 && (
+                          <span className="text-xs text-gray-500">
+                            • {episode.showNotes.length} show notes
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
@@ -134,18 +126,12 @@ export default async function HomePage() {
               We're preparing amazing content about artisanal cheese-making and culinary dreams. 
               Stay tuned for our first episodes!
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Link 
                 href="/about"
                 className="px-6 py-3 bg-purple-700 text-white font-semibold rounded-md hover:bg-purple-600 transition-colors"
               >
                 Learn About the Show
-              </Link>
-              <Link 
-                href="/images"
-                className="px-6 py-3 border-2 border-purple-700 text-purple-700 font-semibold rounded-md hover:bg-purple-700 hover:text-white transition-colors"
-              >
-                View Gallery
               </Link>
             </div>
           </div>
