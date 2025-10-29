@@ -1,4 +1,15 @@
-import { createClient } from 'contentful';
+import { createClient, Entry, Asset, EntryCollection } from 'contentful';
+import { 
+  ContentfulEntry,
+  ContentfulImage,
+  Hero, 
+  Stats, 
+  Page, 
+  HomepageContent,
+  ContentfulHeroFields,
+  ContentfulStatsFields,
+  ContentfulPageFields 
+} from '../types/contentful';
 
 // Content type IDs
 const PAGE_CONTENT_TYPE_ID = 'page';
@@ -23,20 +34,20 @@ function createContentfulClient() {
   });
 }
 
-async function getEntries(content_type, queryParams = {}) {
+async function getEntries(content_type: string, queryParams: Record<string, any> = {}): Promise<EntryCollection<any>> {
   const client = createContentfulClient();
   const entries = await client.getEntries({ content_type, ...queryParams, include: 10 });
   return entries;
 }
 
 // Generic function to get all entries of a specific content type
-export async function getContentByType(contentType) {
+export async function getContentByType(contentType: string): Promise<ContentfulEntry[]> {
   const { items } = await getEntries(contentType);
   return items.map(mapEntry);
 }
 
 // Get homepage content
-export async function getHomepageContent() {
+export async function getHomepageContent(): Promise<HomepageContent> {
   try {
     const [heroEntries, statsEntries] = await Promise.all([
       getEntries(HERO_CONTENT_TYPE_ID),
@@ -44,8 +55,8 @@ export async function getHomepageContent() {
     ]);
 
     return {
-      hero: heroEntries.items.length > 0 ? mapEntry(heroEntries.items[0]) : null,
-      stats: statsEntries.items.length > 0 ? mapEntry(statsEntries.items[0]) : null,
+      hero: heroEntries.items.length > 0 ? mapEntry(heroEntries.items[0]) as Hero : null,
+      stats: statsEntries.items.length > 0 ? mapEntry(statsEntries.items[0]) as Stats : null,
     };
   } catch (error) {
     console.error('Error fetching homepage content:', error);
@@ -53,15 +64,16 @@ export async function getHomepageContent() {
   }
 }
 
-export async function getPagePaths() {
+export async function getPagePaths(): Promise<string[]> {
   const { items } = await getEntries(PAGE_CONTENT_TYPE_ID);
   return items.map((page) => {
-    const slug = page.fields.slug;
-    return slug.startsWith('/') ? slug : `/${slug}`;
+    const slug = page.fields.slug as string;
+    if (!slug) return '/';
+    return typeof slug === 'string' && slug.startsWith('/') ? slug : `/${slug}`;
   });
 }
 
-export async function getPageFromSlug(slug) {
+export async function getPageFromSlug(slug: string): Promise<Page> {
   const { items } = await getEntries(PAGE_CONTENT_TYPE_ID, { 'fields.slug': slug });
   let page = (items ?? [])[0];
   if (!page && slug !== '/' && slug.startsWith('/')) {
@@ -69,11 +81,11 @@ export async function getPageFromSlug(slug) {
     page = (items ?? [])[0];
   }
   if (!page) throw new Error(`Page not found for slug: ${slug}`);
-  return mapEntry(page);
+  return mapEntry(page) as Page;
 }
 
 // Map Contentful entry to clean object
-function mapEntry(entry) {
+function mapEntry(entry: any): any {
   const id = entry.sys?.id;
   const type = entry.sys?.contentType?.sys?.id || entry.sys?.type;
 
@@ -81,10 +93,10 @@ function mapEntry(entry) {
     return {
       id,
       type,
-      src: `https:${entry.fields.file.url}`,
-      alt: entry.fields.title || entry.fields.description || '',
-      width: entry.fields.file?.details?.image?.width,
-      height: entry.fields.file?.details?.image?.height,
+      src: `https:${entry.fields?.file?.url || ''}`,
+      alt: entry.fields?.title || entry.fields?.description || '',
+      width: entry.fields?.file?.details?.image?.width,
+      height: entry.fields?.file?.details?.image?.height,
     };
   }
 
@@ -95,7 +107,7 @@ function mapEntry(entry) {
   };
 }
 
-function parseField(value) {
+function parseField(value: any): any {
   if (typeof value === 'object' && value?.sys) return mapEntry(value);
   if (Array.isArray(value)) return value.map(item => 
     typeof item === 'object' && item?.sys ? mapEntry(item) : item

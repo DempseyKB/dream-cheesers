@@ -1,6 +1,6 @@
-import { Hero } from '../components/Hero.jsx';
-import { Stats } from '../components/Stats.jsx';
-import { getHomepageContent } from '../utils/content.js';
+import { Hero } from '../components/Hero';
+import { Stats } from '../components/Stats';
+import { getHomepageContent } from '../utils/content';
 
 export const metadata = {
   title: 'Dream Cheesers - Home',

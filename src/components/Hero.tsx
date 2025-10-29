@@ -1,16 +1,19 @@
 import Markdown from 'markdown-to-jsx';
 import Image from 'next/image';
-import { Button } from './Button.jsx';
+import { Button } from './Button';
+import { Hero as HeroType } from '../types/contentful';
 
 const themeClassMap = {
   imgLeft: 'md:flex-row-reverse',
   imgRight: 'md:flex-row',
 };
 
-export const Hero = (props) => {
+interface HeroProps extends HeroType {}
+
+export const Hero: React.FC<HeroProps> = (props) => {
   return (
     <div className="px-6 py-16 bg-gray-100 sm:px-12 sm:py-24">
-      <div className={`max-w-6xl mx-auto flex flex-col gap-12 md:items-center ${themeClassMap[props.theme] ?? themeClassMap['imgRight']}`}>
+      <div className={`max-w-6xl mx-auto flex flex-col gap-12 md:items-center ${themeClassMap[props.theme || 'imgRight']}`}>
         <div className="flex-1 w-full max-w-xl mx-auto">
           <h1 className="mb-6 text-4xl font-bold sm:text-5xl">
             {props.heading}
