@@ -1,4 +1,18 @@
-@import 'tailwindcss';
+    @import 'tailwindcss';
+
+/* Custom fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Global styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #002546; /* dream-navy as default background */
+  color: #ffffff;
+}
 
 /* Utility classes for text truncation */
 .line-clamp-3 {
@@ -7,4 +21,67 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Custom gradient backgrounds */
+.gradient-dream-primary {
+  background: linear-gradient(135deg, #002546 0%, #001a35 50%, #000f1f 100%);
+}
+
+.gradient-dream-secondary {
+  background: linear-gradient(135deg, #FF4081 0%, #E91E63 100%);
+}
+
+.gradient-dream-accent {
+  background: linear-gradient(135deg, #26C6DA 0%, #00ACC1 100%);
+}
+
+.gradient-dream-warm {
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+/* Custom card hover effects */
+.dream-card-hover {
+  transition: all 0.3s ease;
+}
+
+.dream-card-hover:hover {
+  transform: translateY(-4px);       
+  box-shadow: 0 20px 40px rgba(255, 64, 129, 0.1), 0 8px 16px rgba(38, 198, 218, 0.08);
+}
+
+/* Page content backgrounds - lighter shades instead of borders */
+.page-content {
+  background-color: #003a5c; /* lighter than main navy */
+}
+
+.content-tile {
+  background-color: #004768; /* even lighter for individual tiles */
+}
+
+.content-tile-lighter {
+  background-color: #005474; /* lightest shade for nested content */
+}
+
+/* Logo animation - removed bouncing effect */
+
+/* Glowing button effect */
+.glow-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.glow-button:hover::before {
+  left: 100%;
 }

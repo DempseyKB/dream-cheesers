@@ -151,13 +151,13 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-dream-navy">
       {/* Back to Episodes */}
-      <div className="bg-white border-b">
+      <div className="bg-dream-navy/80 backdrop-blur-sm border-b border-dream-teal/20 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <Link 
             href="/"
-            className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors"
+            className="inline-flex items-center text-dream-teal hover:text-dream-pink transition-colors duration-300 font-medium"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -169,11 +169,11 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
 
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Show Note Header */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
+        <div className="page-content rounded-lg shadow-sm p-8 mb-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Show Note Thumbnail */}
             <div className="lg:w-1/3">
-              <div className="aspect-square bg-purple-100 rounded-lg overflow-hidden">
+              <div className="aspect-square bg-gradient-to-br from-dream-orange/20 to-dream-yellow/20 rounded-lg overflow-hidden">
                 {showNote.thumbnail && validateImageUrl(showNote.thumbnail.src) ? (
                   <Image
                     src={validateImageUrl(showNote.thumbnail.src)!}
@@ -184,8 +184,8 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <div className="w-24 h-24 bg-purple-300 rounded-full flex items-center justify-center">
-                      <svg className="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-24 h-24 bg-gradient-to-br from-dream-orange to-dream-yellow rounded-full flex items-center justify-center">
+                      <svg className="w-12 h-12 text-dream-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
@@ -197,14 +197,14 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
             {/* Show Note Info */}
             <div className="lg:w-2/3">
               <div className="mb-4">
-                <span className="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium mb-3">
+                <span className="inline-block bg-dream-teal/20 text-dream-teal px-3 py-1 rounded-full text-sm font-medium mb-3">
                   {showNote.category}
                 </span>
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                <h1 className="text-3xl lg:text-4xl font-bold text-dream-cream mb-4 bg-gradient-to-r from-dream-pink via-dream-yellow to-dream-teal bg-clip-text text-transparent">
                   {showNote.displayName}
                 </h1>
                 {showNote.teaserText && (
-                  <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                  <p className="text-lg text-dream-cream/80 leading-relaxed mb-6">
                     {showNote.teaserText}
                   </p>
                 )}
@@ -213,9 +213,9 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
               {/* Content */}
               {showNote.content && (
                 <div className="mb-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-3">Details</h2>
-                  <div className="prose prose-purple max-w-none">
-                    <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  <h2 className="text-lg font-semibold text-dream-coral mb-3">Details</h2>
+                  <div className="prose prose-sm max-w-none text-dream-cream/80 prose-headings:text-white prose-strong:text-dream-coral prose-a:text-dream-teal hover:prose-a:text-dream-teal-light">
+                    <div className="leading-relaxed whitespace-pre-wrap">
                       {renderRichTextContent(showNote.content)}
                     </div>
                   </div>
@@ -225,7 +225,7 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
               {/* Links Section */}
               {showNote.links && showNote.links.length > 0 && (
                 <div className="mb-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-3">Related Links</h2>
+                  <h2 className="text-lg font-semibold text-dream-coral mb-3">Related Links</h2>
                   <div className="space-y-2">
                     {showNote.links.map((link, index) => (
                       <a
@@ -233,7 +233,7 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors"
+                        className="inline-flex items-center text-dream-teal hover:text-dream-teal-light transition-colors"
                       >
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -250,8 +250,8 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
 
         {/* Media Gallery */}
         {showNote.media && showNote.media.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Media Gallery</h2>
+          <div className="page-content rounded-lg shadow-sm p-8">
+            <h2 className="text-2xl font-bold text-dream-cream mb-6 bg-gradient-to-r from-dream-pink to-dream-orange bg-clip-text text-transparent">Media Gallery</h2>
             
             {/* Grid layout for multiple images */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -260,7 +260,7 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
                 
                 return validImageSrc ? (
                   <div key={mediaItem.id || index} className="group">
-                    <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                    <div className="aspect-video content-tile rounded-lg overflow-hidden">
                       <Image
                         src={validImageSrc}
                         alt={mediaItem.alt || `Media ${index + 1}`}
@@ -273,15 +273,15 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
                     
                     {/* Media Caption */}
                     {mediaItem.alt && (
-                      <p className="mt-2 text-sm text-gray-600 text-center">
+                      <p className="mt-2 text-sm text-dream-cream/70 text-center">
                         {mediaItem.alt}
                       </p>
                     )}
                   </div>
                 ) : (
                   <div key={mediaItem.id || index} className="group">
-                    <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
-                      <div className="text-center text-gray-500">
+                    <div className="aspect-video content-tile rounded-lg overflow-hidden flex items-center justify-center">
+                      <div className="text-center text-dream-cream/60">
                         <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.502 0L4.314 15.5c-.77.833.192 2.5 1.732 2.5z" />
                         </svg>
@@ -297,12 +297,12 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
 
         {/* No Media Placeholder */}
         {(!showNote.media || showNote.media.length === 0) && (
-          <div className="bg-white rounded-lg shadow-sm p-8">
+          <div className="page-content rounded-lg shadow-sm p-8">
             <div className="text-center py-12">
-              <svg className="mx-auto w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="mx-auto w-16 h-16 text-dream-cream/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-gray-500">No media files available for this show note.</p>
+              <p className="text-dream-cream/60">No media files available for this show note.</p>
             </div>
           </div>
         )}

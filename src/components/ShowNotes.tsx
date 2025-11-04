@@ -12,10 +12,10 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-2xl font-bold text-gray-900">Show Notes</h3>
+      <h3 className="text-2xl font-bold text-dream-coral">Show Notes</h3>
       <div className="grid gap-6 md:grid-cols-2">
         {showNotes.map((note) => (
-          <div key={note.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div key={note.id} className="bg-dream-navy-light rounded-lg overflow-hidden dream-card-hover">
             {/* Thumbnail */}
             {note.thumbnail && (
               <div className="aspect-video relative">
@@ -32,17 +32,17 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
             {/* Content */}
             <div className="p-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                <span className="text-xs bg-dream-teal/20 text-dream-teal px-2 py-1 rounded-full font-medium">
                   {note.category}
                 </span>
               </div>
               
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">
+              <h4 className="text-lg font-semibold text-white mb-2">
                 {note.displayName}
               </h4>
               
               {note.teaserText && (
-                <p className="text-gray-600 text-sm mb-4">
+                <p className="text-gray-300 text-sm mb-4">
                   {note.teaserText}
                 </p>
               )}
@@ -50,7 +50,7 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
               {/* Rich text content - simplified for now */}
               {note.content && (
                 <div 
-                  className="prose prose-sm max-w-none text-gray-700 mb-4"
+                  className="prose prose-sm max-w-none text-gray-300 mb-4 prose-headings:text-white prose-strong:text-dream-coral prose-a:text-dream-teal hover:prose-a:text-dream-teal-light"
                   dangerouslySetInnerHTML={{ __html: note.content }}
                 />
               )}
@@ -58,7 +58,7 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
               {/* Links */}
               {note.links && note.links.length > 0 && (
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium text-gray-900">Related Links:</h5>
+                  <h5 className="text-sm font-medium text-dream-coral">Related Links:</h5>
                   <div className="space-y-1">
                     {note.links.map((link, index) => (
                       <a
@@ -66,7 +66,7 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block text-sm text-purple-600 hover:text-purple-700 truncate"
+                        className="block text-sm text-dream-teal hover:text-dream-teal-light truncate transition-colors"
                       >
                         {link}
                       </a>
@@ -78,10 +78,10 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
               {/* Additional Media */}
               {note.media && note.media.length > 0 && (
                 <div className="mt-4">
-                  <h5 className="text-sm font-medium text-gray-900 mb-2">Media:</h5>
+                  <h5 className="text-sm font-medium text-dream-coral mb-2">Media:</h5>
                   <div className="grid grid-cols-2 gap-2">
                     {note.media.slice(0, 4).map((media, index) => (
-                      <div key={media.id} className="aspect-square relative rounded-md overflow-hidden">
+                      <div key={media.id} className="aspect-square relative rounded-md overflow-hidden bg-dream-navy-lighter">
                         <Image
                           src={media.src}
                           alt={media.alt || `Media ${index + 1}`}
@@ -93,7 +93,7 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showNotes }) => {
                     ))}
                   </div>
                   {note.media.length > 4 && (
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-gray-400 mt-2">
                       +{note.media.length - 4} more media files
                     </p>
                   )}
