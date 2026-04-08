@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "import": "node ./contentful/import.js"
+    "generate-types": "node ./contentful/generate-types.js"
   },
   "dependencies": {
     "contentful": "^11.8.9",

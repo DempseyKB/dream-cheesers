@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ShowNote } from '../types/content';
+import { ShowNote } from '../types/contentTypes';
 
 interface ShowNotesProps {
   showNotes: ShowNote[];

@@ -32,10 +32,9 @@ After signing into Contentful, create a new space.
 
 If you don't already have a management token (or _personal access token_), generate one. To do so, go into your new empty space, then:
 
-1. Click _Settings_
-1. Choose _API Keys_
-1. Select the _Content management tokens_ tab
-1. Click the button to generate a new token
+1. Create a new CMA token for your admin account.
+2. Authorize it for this site
+3. Add the token to the .env
 
 ![Generate content management token](./docs/generate-mgmt-token.png)
 
@@ -44,7 +43,7 @@ If you don't already have a management token (or _personal access token_), gener
 From the same place you generated the management token, you can now generate API access keys.
 
 1. Select the *content delivery / preview tokens* tab
-1. Choose *Add API key*
+2. Choose *Add API key*
 
 ### Set Environment Variables
 
@@ -61,9 +60,17 @@ Note: the Contentful space ID can be viewed and copied via *Settings->General Se
 
 ### Import Content (Optional)
 
-If you want to use the existing content models, import them into Contentful:
+If you want to use the existing content models, import them from Contentful:
 
-    npm run import
+  npm run import
+
+### Generate TypeScript Types
+
+To generate TypeScript types based on your Contentful content models:
+
+  npm run generate-types
+
+This will fetch your content models from Contentful and create `src/types/content-generated.ts` with matching TypeScript interfaces. Keep your types in sync with your Contentful schema by running this command whenever you modify your content models.
 
 ### Run the Website
 

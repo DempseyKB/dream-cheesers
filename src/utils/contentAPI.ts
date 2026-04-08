@@ -1,5 +1,5 @@
+import { ContentfulEntry, Episode, RandomThoughts, Menagerie } from '@/types/contentTypes';
 import { createClient, Entry, Asset, EntryCollection } from 'contentful';
-import { ContentfulEntry, ContentfulImage, Episode, ShowNote } from '../types/content';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
@@ -62,33 +62,59 @@ export async function getEpisodes(): Promise<Episode[]> {
   }
 }
 
-// Get all show notes
-export async function getShowNotes(): Promise<ShowNote[]> {
+// Get all random thoughts
+export async function getRandomThoughts(): Promise<RandomThoughts[]> {
   try {
     let items: any[] = [];
     
     try {
-      const result = await getEntries('showNote', {
+      const result = await getEntries('randomThoughts', {
         order: 'fields.displayName'
       });
       items = result.items;
     } catch {
-      // If 'showNote' doesn't work, try 'showNotes'
-      try {
-        const result = await getEntries('showNotes', {
-          order: 'fields.displayName'
-        });
-        items = result.items;
-      } catch {
-        console.log('No show notes content type found yet, returning empty array');
-        return [];
-      }
+      console.log('No random thoughts content type found yet, returning empty array');
+      return [];
     }
     
-    return items.map(mapEntry) as ShowNote[];
+    return items.map(mapEntry) as RandomThoughts[];
   } catch (error) {
-    console.error('Error fetching show notes:', error);
+    console.error('Error fetching random thoughts:', error);
     return [];
+  }
+}
+
+// Get all menagerie items
+export async function getMenagerie(): Promise<Menagerie[]> {
+  try {
+    let items: any[] = [];
+    
+    try {
+      const result = await getEntries('menagerie', {
+        order: 'fields.displayName'
+      });
+      items = result.items;
+    } catch {
+      console.log('No menagerie content type found yet, returning empty array');
+      return [];
+    }
+    
+    return items.map(mapEntry) as Menagerie[];
+  } catch (error) {
+    console.error('Error fetching menagerie:', error);
+    return [];
+  }
+}
+
+// Get a specific episode by ID
+export async function getEpisodeById(id: string): Promise<Episode | null> {
+  try {
+    const client = createContentfulClient();
+    const entry = await client.getEntry(id);
+    return mapEntry(entry) as Episode;
+  } catch (error) {
+    console.error('Error fetching episode by ID:', error);
+    return null;
   }
 }
 
@@ -120,45 +146,62 @@ export async function getEpisodeByNumber(episodeNumber: number): Promise<Episode
   }
 }
 
-// Get a specific show note by ID
-export async function getShowNoteById(id: string): Promise<ShowNote | null> {
+// Get a specific item by ID (works for both RandomThoughts and Menagerie)
+export async function getShowNoteById(id: string): Promise<RandomThoughts | Menagerie | null> {
   try {
     const client = createContentfulClient();
     const entry = await client.getEntry(id);
-    return mapEntry(entry) as ShowNote;
+    return mapEntry(entry) as RandomThoughts | Menagerie;
   } catch (error) {
     console.error('Error fetching show note by ID:', error);
     return null;
   }
 }
 
-// Get a specific show note by internal name
-export async function getShowNoteByInternalName(internalName: string): Promise<ShowNote | null> {
+// Get a specific RandomThought by entry title
+export async function getRandomThoughtByTitle(title: string): Promise<RandomThoughts | null> {
+  try {
+    const result = await getEntries('randomThoughts', {
+      'fields.displayName': title,
+      limit: 1
+    });
+    
+    return result.items.length > 0 ? mapEntry(result.items[0]) as RandomThoughts : null;
+  } catch (error) {
+    console.error('Error fetching random thought by title:', error);
+    return null;
+  }
+}
+
+// Get a specific item by entry title (works for both RandomThoughts and Menagerie)
+export async function getShowNoteByTitle(title: string): Promise<RandomThoughts | Menagerie | null> {
   try {
     let items: any[] = [];
     
+    // Try random thoughts first
     try {
-      const result = await getEntries('showNote', {
-        'fields.internalName': internalName,
+      const result = await getEntries('randomThoughts', {
+        'fields.displayName': title,
         limit: 1
       });
       items = result.items;
     } catch {
+      // If not found, try menagerie
       try {
-        const result = await getEntries('showNotes', {
-          'fields.internalName': internalName,
+        const result = await getEntries('menagerie', {
+          'fields.displayName': title,
           limit: 1
         });
         items = result.items;
       } catch {
-        console.log('No show notes content type found');
+        console.log('No show note found with title:', title);
         return null;
       }
     }
     
-    return items.length > 0 ? mapEntry(items[0]) as ShowNote : null;
+    return items.length > 0 ? mapEntry(items[0]) as RandomThoughts | Menagerie : null;
   } catch (error) {
-    console.error('Error fetching show note by internal name:', error);
+    console.error('Error fetching show note by title:', error);
     return null;
   }
 }
@@ -171,7 +214,14 @@ function mapEntry(entry: any): any {
   if (entry.sys?.type === 'Asset') {
     const fileUrl = entry.fields?.file?.url || '';
     // Contentful URLs can come as protocol-relative (//...) or with protocol (https://...)
-    const src = fileUrl.startsWith('//') ? `https:${fileUrl}` : fileUrl.startsWith('http') ? fileUrl : `https:${fileUrl}`;
+    // Handle empty URLs to avoid creating invalid URLs like "https:"
+    const src = !fileUrl
+      ? ''
+      : fileUrl.startsWith('//')
+        ? `https:${fileUrl}`
+        : fileUrl.startsWith('http')
+          ? fileUrl
+          : `https:${fileUrl}`;
     
     return {
       id,

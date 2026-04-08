@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getShowNoteByInternalName } from '../../../utils/content';
-import { ShowNote } from '../../../types/content';
+import { getShowNoteById } from '../../../utils/contentAPI';
+import { RandomThoughts } from '@/types/contentTypes';
 
 // Helper function to validate and fix image URLs
 function validateImageUrl(url: string): string | null {
@@ -122,31 +122,31 @@ function renderRichTextContent(content: any): React.ReactNode {
   return content;
 }
 
-interface ShowNotePageProps {
+interface RandomThoughtPageProps {
   params: {
-    internalName: string;
+    id: string;
   };
 }
 
-export async function generateMetadata({ params }: ShowNotePageProps) {
-  const showNote = await getShowNoteByInternalName(params.internalName);
+export async function generateMetadata({ params }: RandomThoughtPageProps) {
+  const randomThought = await getShowNoteById(params.id);
   
-  if (!showNote) {
+  if (!randomThought) {
     return {
-      title: 'Show Note Not Found - Dream Cheesers',
+      title: 'Random Thought Not Found - Dream Cheesers',
     };
   }
 
   return {
-    title: `${showNote.displayName} - Dream Cheesers Show Notes`,
-    description: showNote.teaserText || `Show notes for ${showNote.displayName} from the Dream Cheesers podcast`,
+    title: `${randomThought.displayName} - Dream Cheesers Random Thoughts`,
+    description: randomThought.teaserText || `Random thought from the Dream Cheesers podcast`,
   };
 }
 
-export default async function ShowNotePage({ params }: ShowNotePageProps) {
-  const showNote = await getShowNoteByInternalName(params.internalName);
+export default async function RandomThoughtPage({ params }: RandomThoughtPageProps) {
+  const randomThought = await getShowNoteById(params.id);
   
-  if (!showNote) {
+  if (!randomThought) {
     notFound();
   }
 
@@ -155,7 +155,7 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
       {/* Back to Episodes */}
       <div className="bg-dream-navy/80 backdrop-blur-sm border-b border-dream-teal/20 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center text-dream-teal hover:text-dream-pink transition-colors duration-300 font-medium"
           >
@@ -168,16 +168,16 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Show Note Header */}
+        {/* Random Thought Header */}
         <div className="page-content rounded-lg shadow-sm p-8 mb-8">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Show Note Thumbnail */}
+            {/* Random Thought Thumbnail */}
             <div className="lg:w-1/3">
               <div className="aspect-square bg-gradient-to-br from-dream-orange/20 to-dream-yellow/20 rounded-lg overflow-hidden">
-                {showNote.thumbnail && validateImageUrl(showNote.thumbnail.src) ? (
+                {randomThought.thumbnail && validateImageUrl(randomThought.thumbnail.src) ? (
                   <Image
-                    src={validateImageUrl(showNote.thumbnail.src)!}
-                    alt={showNote.thumbnail.alt || showNote.displayName}
+                    src={validateImageUrl(randomThought.thumbnail.src)!}
+                    alt={randomThought.thumbnail.alt || randomThought.displayName}
                     width={400}
                     height={400}
                     className="w-full h-full object-cover"
@@ -194,40 +194,31 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
               </div>
             </div>
 
-            {/* Show Note Info */}
+            {/* Random Thought Header */}
             <div className="lg:w-2/3">
               <div className="mb-4">
-                <span className="inline-block bg-dream-teal/20 text-dream-teal px-3 py-1 rounded-full text-sm font-medium mb-3">
-                  {showNote.category}
-                </span>
-                <h1 className="text-3xl lg:text-4xl font-bold text-dream-cream mb-4 bg-gradient-to-r from-dream-pink via-dream-yellow to-dream-teal bg-clip-text text-transparent">
-                  {showNote.displayName}
+                <h1 className="text-3xl lg:text-4xl font-bold text-dream-cream mb-4 bg-gradient-to-r from-dream-pink via-dream-yellow to-dream-teal bg-clip-text">
+                  {randomThought.displayName}
                 </h1>
-                {showNote.teaserText && (
-                  <p className="text-lg text-dream-cream/80 leading-relaxed mb-6">
-                    {showNote.teaserText}
-                  </p>
-                )}
               </div>
 
               {/* Content */}
-              {showNote.content && (
+              {randomThought.content && (
                 <div className="mb-6">
-                  <h2 className="text-lg font-semibold text-dream-coral mb-3">Details</h2>
                   <div className="prose prose-sm max-w-none text-dream-cream/80 prose-headings:text-white prose-strong:text-dream-coral prose-a:text-dream-teal hover:prose-a:text-dream-teal-light">
                     <div className="leading-relaxed whitespace-pre-wrap">
-                      {renderRichTextContent(showNote.content)}
+                      {renderRichTextContent(randomThought.content)}
                     </div>
                   </div>
                 </div>
               )}
 
               {/* Links Section */}
-              {showNote.links && showNote.links.length > 0 && (
+              {randomThought.links && randomThought.links.length > 0 && (
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-dream-coral mb-3">Related Links</h2>
                   <div className="space-y-2">
-                    {showNote.links.map((link, index) => (
+                    {randomThought.links.map((link, index) => (
                       <a
                         key={index}
                         href={link}
@@ -249,13 +240,13 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
         </div>
 
         {/* Media Gallery */}
-        {showNote.media && showNote.media.length > 0 && (
+        {randomThought.media && randomThought.media.length > 0 && (
           <div className="page-content rounded-lg shadow-sm p-8">
-            <h2 className="text-2xl font-bold text-dream-cream mb-6 bg-gradient-to-r from-dream-pink to-dream-orange bg-clip-text text-transparent">Media Gallery</h2>
+            <h2 className="text-2xl font-bold text-dream-cream mb-6 bg-gradient-to-r from-dream-pink to-dream-orange bg-clip-text">Media Gallery</h2>
             
             {/* Grid layout for multiple images */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {showNote.media.map((mediaItem, index) => {
+              {randomThought.media.map((mediaItem, index) => {
                 const validImageSrc = validateImageUrl(mediaItem.src);
                 
                 return validImageSrc ? (
@@ -296,13 +287,13 @@ export default async function ShowNotePage({ params }: ShowNotePageProps) {
         )}
 
         {/* No Media Placeholder */}
-        {(!showNote.media || showNote.media.length === 0) && (
+        {(!randomThought.media || randomThought.media.length === 0) && (
           <div className="page-content rounded-lg shadow-sm p-8">
             <div className="text-center py-12">
               <svg className="mx-auto w-16 h-16 text-dream-cream/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-dream-cream/60">No media files available for this show note.</p>
+              <p className="text-dream-cream/60">No media files available for this random thought.</p>
             </div>
           </div>
         )}
