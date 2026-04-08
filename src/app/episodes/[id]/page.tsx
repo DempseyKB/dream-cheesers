@@ -127,10 +127,8 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
         {episode.showNotes && episode.showNotes.length > 0 && (
           <div className="page-content rounded-xl shadow-lg p-8">
             <h2 className="text-2xl font-bold text-dream-cream mb-6 bg-gradient-to-r from-dream-pink to-dream-orange bg-clip-text">Show Notes</h2>
-            <RandomThoughts randomThoughts={episode.showNotes.filter((note): note is import('@/types/contentTypes').RandomThoughts => note.type === 'randomThoughts')} />
-            <div className="mt-8">
-              <Menagerie menagerie={episode.showNotes.filter((note): note is import('@/types/contentTypes').Menagerie => note.type === 'menagerie')} />
-            </div>
+            <RandomThoughts randomThoughts={episode.showNotes.filter((note): note is import('@/types/contentTypes').RandomThoughts => note.type === 'randomThoughts')} episodeId={params.id} />
+            <Menagerie menagerie={episode.showNotes.filter((note): note is import('@/types/contentTypes').Menagerie => note.type === 'menagerie')} />
           </div>
         )}
 

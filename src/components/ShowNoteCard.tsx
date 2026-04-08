@@ -7,11 +7,14 @@ export type ShowNoteItem = Menagerie | RandomThoughts;
 interface ShowNoteCardProps {
   note: ShowNoteItem;
   category: string;
+  episodeId?: string;
 }
 
-export const ShowNoteCard: React.FC<ShowNoteCardProps> = ({ note, category }) => {
-  // Determine route based on category
-  const route = category === 'Random Thought' ? '/random-thoughts' : '/show-notes';
+export const ShowNoteCard: React.FC<ShowNoteCardProps> = ({ note, category, episodeId }) => {
+  // Determine route based on category and whether it's in an episode context
+  const route = category === 'Random Thought'
+    ? (episodeId ? `/episodes/${episodeId}/random-thoughts` : '/random-thoughts')
+    : '/show-notes';
   
   return (
     <Link href={`${route}/${note.id}`} className="block">
