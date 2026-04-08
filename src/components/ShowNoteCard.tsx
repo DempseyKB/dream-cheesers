@@ -54,53 +54,6 @@ export const ShowNoteCard: React.FC<ShowNoteCardProps> = ({ note, category }) =>
             dangerouslySetInnerHTML={{ __html: note.content }}
           />
         )}
-        
-        {/* Links */}
-        {note.links && note.links.length > 0 && (
-          <div className="space-y-2">
-            <h5 className="text-sm font-medium text-dream-coral">Related Links:</h5>
-            <div className="space-y-1">
-              {note.links.map((link, index) => (
-                <a
-                  key={index}
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-sm text-dream-teal hover:text-dream-teal-light truncate transition-colors"
-                >
-                  {link}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Additional Media */}
-        {note.media && note.media.length > 0 && (
-          <div className="mt-4">
-            <h5 className="text-sm font-medium text-dream-coral mb-2">Media:</h5>
-            <div className="grid grid-cols-2 gap-2">
-              {note.media.slice(0, 4).map((media, index) => (
-                media.src ? (
-                  <div key={media.id || index} className="aspect-square relative rounded-md overflow-hidden bg-dream-navy-lighter">
-                    <Image
-                      src={media.src}
-                      alt={media.alt || `Media ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                    />
-                  </div>
-                ) : null
-              ))}
-            </div>
-            {note.media.length > 4 && (
-              <p className="text-xs text-gray-400 mt-2">
-                +{note.media.length - 4} more media files
-              </p>
-            )}
-          </div>
-        )}
       </div>
     </div>
     </Link>

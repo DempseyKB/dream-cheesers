@@ -12,7 +12,6 @@ export const Menagerie: React.FC<MenagerieProps> = ({ menagerie }) => {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-2xl font-bold text-dream-coral">Menagerie</h3>
       <div className="grid gap-6 md:grid-cols-2">
         {menagerie.map((note) => (
           <ShowNoteCard key={note.id} note={note} category="Menagerie" />

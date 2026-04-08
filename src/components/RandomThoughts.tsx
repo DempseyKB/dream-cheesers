@@ -12,7 +12,6 @@ export const RandomThoughts: React.FC<RandomThoughtsProps> = ({ randomThoughts }
 
   return (
     <div className="space-y-6">
-      <h3 className="text-2xl font-bold text-dream-coral">Random Thoughts</h3>
       <div className="grid gap-6 md:grid-cols-2">
         {randomThoughts.map((note) => (
           <ShowNoteCard key={note.id} note={note} category="Random Thought" />
