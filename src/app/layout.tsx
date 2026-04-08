@@ -1,5 +1,5 @@
 import '../../styles/globals.css';
-import { Navigation } from '../components/Navigation';
+import { PageHeader } from '../components/PageHeader';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
+        <PageHeader />
         {children}
       </body>
     </html>
