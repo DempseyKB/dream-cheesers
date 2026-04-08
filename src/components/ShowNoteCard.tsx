@@ -49,14 +49,6 @@ export const ShowNoteCard: React.FC<ShowNoteCardProps> = ({ note, category, epis
             {note.teaserText}
           </p>
         )}
-        
-        {/* Rich text content - simplified for now */}
-        {note.content && (
-          <div 
-            className="prose prose-sm max-w-none text-gray-300 mb-4 prose-headings:text-white prose-strong:text-dream-coral prose-a:text-dream-teal hover:prose-a:text-dream-teal-light"
-            dangerouslySetInnerHTML={{ __html: note.content }}
-          />
-        )}
       </div>
     </div>
     </Link>
